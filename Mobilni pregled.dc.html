@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;background:#0B0B0B;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#FFF521;text-decoration:none}
+  a:hover{color:#F7EA12}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#0B0B0B;padding:clamp(28px,3vw,56px) clamp(16px,2.4vw,40px) clamp(48px,5vw,80px);box-sizing:border-box;display:flex;flex-direction:column;gap:28px;align-items:center;">
+
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:720px;text-align:center;align-items:center;">
+    <span style="font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">MOBILNI PREGLED — UŽIVO</span>
+    <h1 style="margin:0;font-size:clamp(24px,3vw,36px);line-height:1.06;font-weight:700;letter-spacing:-0.015em;color:#F5F5F5;">Stvarna stranica na iPhone mini ekranu</h1>
+    <p style="margin:0;font-size:15px;line-height:1.55;color:#AEAC9D;">Ovo je živi prikaz <a href="Landing%20Page.dc.html">Landing Page</a> na 375×812. Svaka izmjena na stranici odmah se vidi i ovdje — skroluj i klikći normalno.</p>
+  </div>
+
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ dark }}" width="{{ w }}" height="{{ h }}" hint-size="375px,812px">
+    <iframe src="Landing%20Page.dc.html" title="Landing Page — mobilni prikaz" style="display:block;width:375px;height:812px;border:0;background:#111111;"></iframe>
+  </x-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return { dark: true, w: 375, h: 812 };
+  }
+}
+</script>
+</body>
+</html>

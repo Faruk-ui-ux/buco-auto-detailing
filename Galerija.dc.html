@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;background:#111111;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  *{-webkit-tap-highlight-color:transparent}
+  a{color:#FFF521;text-decoration:none}
+  a:hover{text-decoration:none}
+  .nav-link{position:relative;color:#AEAC9D;font-size:15px;line-height:20px;font-weight:500;text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-link::after{content:'';position:absolute;left:0;bottom:-8px;height:2px;width:100%;background:#FFF521;border-radius:2px;transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.22,.61,.36,1)}
+  .nav-link:hover{color:#F5F5F5}
+  .nav-link:hover::after{transform:scaleX(1)}
+  .nav-on{color:#FFF521}
+  .nav-on:hover{color:#FFF521}
+  .nav-on::after{transform:scaleX(1)}
+  .btn-outline{position:relative;overflow:hidden;background-image:linear-gradient(90deg,#FFF521,#FFF521);background-repeat:no-repeat;background-position:left center;background-size:0% 100%;transition:background-size .5s cubic-bezier(.22,.61,.36,1),color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-outline:hover{background-size:100% 100%;color:#111111;transform:translateY(-2px)}
+  .btn-y,.btn-cta{position:relative;overflow:hidden;isolation:isolate}
+  .btn-y::after,.btn-cta::after{content:"";position:absolute;top:-60%;bottom:-60%;left:-70%;width:44%;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.62) 50%,rgba(255,255,255,0) 100%);transform:translate3d(0,0,0) rotate(10deg);opacity:0;transition:transform 1s cubic-bezier(.3,.7,.3,1),opacity .3s ease}
+  .btn-y:hover::after,.btn-cta:hover::after{transform:translate3d(420%,0,0) rotate(10deg);opacity:1}
+  .btn-y{transition:background-color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-y:hover{background:#F7EA12;transform:translateY(-2px)}
+  .btn-cta{transition:background-color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-cta:hover{background:#F7EA12;transform:translateY(-2px)}
+  .btn-y svg,.btn-ghost svg{transition:transform .45s cubic-bezier(.22,.61,.36,1)}
+  .btn-y:hover svg,.btn-ghost:hover svg{transform:translateX(4px)}
+  .btn-ghost{position:relative;overflow:hidden;background-image:linear-gradient(90deg,rgba(255,255,255,0.07),rgba(255,255,255,0.07));background-repeat:no-repeat;background-position:left center;background-size:0% 100%;transition:background-size .5s cubic-bezier(.22,.61,.36,1),border-color .35s ease,color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-ghost:hover{background-size:100% 100%;border-color:#8C8B86;color:#F5F5F5;transform:translateY(-2px)}
+  [data-nav] svg{transition:transform .4s cubic-bezier(.22,.61,.36,1)}
+  [data-nav="next"]:hover svg{transform:translateX(3px)}
+  [data-nav="prev"]:hover svg{transform:scaleX(-1) translateX(3px)}
+
+  .burger{display:none;appearance:none;border:0;background:transparent;width:48px;height:48px;padding:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+  .burger span{display:block;width:24px;height:2px;background:#F5F5F5;border-radius:2px;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .25s ease}
+  .burger[data-open="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .burger[data-open="true"] span:nth-child(2){opacity:0}
+  .burger[data-open="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  .menu{display:none;position:fixed;left:0;right:0;top:0;z-index:55;padding:96px 20px 40px;box-sizing:border-box;background:#0E0E0E;flex-direction:column;transform:translateY(-102%);opacity:0;visibility:hidden;transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .35s ease,visibility .35s}
+  .menu[data-open="true"]{transform:none;opacity:1;visibility:visible}
+  .menu a.m-link{display:block;padding:16px 0;border-bottom:1px solid #232322;font-size:22px;line-height:28px;font-weight:600;color:#F5F5F5;transition:color .3s ease,padding-left .3s ease}
+  .menu a.m-link:hover{color:#FFF521;padding-left:8px}
+
+  [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)}
+  [data-reveal].in{opacity:1;transform:none}
+
+  .tile{position:relative;display:block;width:100%;margin:0;padding:0;border:0;overflow:hidden;background:#1A1A1A;cursor:pointer;outline:none;line-height:0}
+  .tile::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,0.5) 0%,rgba(8,8,8,0) 46%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .tile:hover::after,.tile:focus-visible::after{opacity:1}
+  .tile:focus-visible{box-shadow:0 0 0 2px #FFF521}
+  .tile-zoom{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;background:rgba(12,12,12,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#FFF521;opacity:0;transform:scale(.86);transition:opacity .4s ease,transform .4s cubic-bezier(.22,.61,.36,1);pointer-events:none;z-index:2}
+  .tile:hover .tile-zoom,.tile:focus-visible .tile-zoom{opacity:1;transform:scale(1)}
+
+  @keyframes lbIn{from{opacity:0}to{opacity:1}}
+  @keyframes lbPop{from{opacity:0;transform:scale(.96) translateY(12px)}to{opacity:1;transform:none}}
+  .lb{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(8,8,8,0.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:lbIn .3s ease both}
+  .lb-fig{position:relative;margin:0;width:100%;max-width:1120px;animation:lbPop .5s cubic-bezier(.22,.61,.36,1) both}
+  .lb-fig img{display:block;width:100%;max-height:74vh;object-fit:contain;border-radius:4px}
+  .lb-btn{appearance:none;width:48px;height:48px;padding:0;border-radius:50%;border:1px solid #2A2A28;background:rgba(20,20,20,0.8);color:#AEAC9D;display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;transition:color .3s ease,border-color .3s ease,transform .3s cubic-bezier(.22,.61,.36,1)}
+  .lb-btn:hover{color:#FFF521;border-color:rgba(255,245,33,0.55);transform:scale(1.06)}
+
+  @media (max-width:900px){
+    .nav-desk{display:none !important}
+    .hd-cta{display:none !important}
+    .burger{display:flex}
+    .menu{display:flex}
+  }
+  @media (max-width:680px){.lb{padding:16px}}
+  @media (max-width:480px){
+    .sec-pad{padding-left:16px !important;padding-right:16px !important;padding-top:48px !important;padding-bottom:48px !important}
+    .sec-pad h1,.sec-pad h2{font-size:29px !important;line-height:1.1 !important}
+    .menu{padding:88px 16px 32px !important}
+  }
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){[data-reveal]{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</helmet>
+
+<div style="width:100%;min-height:100vh;background:#111111;color:#F5F5F5;">
+  <header style="position:sticky;top:0;z-index:50;height:92px;background:rgba(17,17,17,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid #232322;">
+    <div style="max-width:1440px;height:100%;margin:0 auto;padding:0 20px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="Landing%20Page.dc.html" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;flex:none;">
+        <span style="font-size:26px;line-height:26px;font-weight:800;font-style:italic;letter-spacing:0.02em;color:#F5F5F5;">BUCO</span>
+        <span style="display:block;width:100%;height:1px;background:#5F5E5B;"></span>
+        <span style="font-size:9px;line-height:12px;font-weight:600;letter-spacing:0.26em;color:#AEAC9D;">CAR DETAILING STUDIO</span>
+      </a>
+      <nav class="nav-desk" style="display:flex;align-items:center;gap:clamp(20px,2.4vw,32px);min-width:0;">
+        <a class="nav-link" href="Landing%20Page.dc.html">Početna</a>
+        <a class="nav-link" href="Landing%20Page.dc.html#usluge">Usluge</a>
+        <a class="nav-link" href="Landing%20Page.dc.html#galerija">Prije i poslije</a>
+        <a class="nav-link nav-on" href="#vrh">Galerija</a>
+        <a class="nav-link" href="Landing%20Page.dc.html#recenzije">Recenzije</a>
+        <a class="nav-link" href="Landing%20Page.dc.html#zakazi">Kontakt</a>
+      </nav>
+      <a class="btn-y hd-cta" href="tel:+38761111222" style="display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border-radius:999px;border:1px solid #FFF521;background:#FFF521;color:#111111;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;flex:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        POZOVI
+      </a>
+      <button class="burger" type="button" aria-label="Otvori meni" data-open="{{ menuOpen }}" onClick="{{ toggleMenu }}">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="menu" data-open="{{ menuOpen }}">
+    <a class="m-link" href="Landing%20Page.dc.html" onClick="{{ closeMenu }}">Početna</a>
+    <a class="m-link" href="Landing%20Page.dc.html#usluge" onClick="{{ closeMenu }}">Usluge</a>
+    <a class="m-link" href="Landing%20Page.dc.html#galerija" onClick="{{ closeMenu }}">Prije i poslije</a>
+    <a class="m-link" href="#vrh" onClick="{{ closeMenu }}">Galerija</a>
+    <a class="m-link" href="Landing%20Page.dc.html#recenzije" onClick="{{ closeMenu }}">Recenzije</a>
+    <a class="m-link" href="Landing%20Page.dc.html#zakazi" onClick="{{ closeMenu }}">Kontakt</a>
+    <a class="btn-y" href="tel:+38761111222" onClick="{{ closeMenu }}" style="margin-top:32px;display:inline-flex;align-items:center;justify-content:center;gap:12px;height:56px;border-radius:999px;background:#FFF521;color:#111111;font-size:14px;font-weight:700;letter-spacing:0.09em;text-decoration:none;">
+      061 111 222
+    </a>
+  </div>
+
+  <div id="vrh" style="max-width:1440px;margin:0 auto;padding:clamp(48px,5.6vw,88px) 20px clamp(64px,7vw,104px);box-sizing:border-box;scroll-margin-top:92px;">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;max-width:760px;margin:0 auto clamp(32px,3.6vw,52px);">
+      <span data-reveal style="font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">GALERIJA</span>
+      <h1 data-reveal style="margin:0;font-size:clamp(32px,4.2vw,56px);line-height:1.05;font-weight:700;letter-spacing:-0.022em;color:#F5F5F5;text-wrap:balance;">Rezultati govore više od riječi</h1>
+      <p data-reveal style="margin:0;font-size:clamp(15px,1.2vw,17px);line-height:1.62;color:#AEAC9D;text-wrap:pretty;">Svaki automobil zaslužuje vrhunsku njegu. Pogledaj stvarne primjere našeg rada i uvjeri se u kvalitet koji pružamo.</p>
+    </div>
+
+    <div data-gallery-grid="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:clamp(12px,1.3vw,20px);align-items:stretch;">
+      <button class="tile" data-reveal type="button" onClick="{{ open0 }}" aria-label="Otvori sliku — Audi A7 nakon obrade laka">
+        <img src="img/gal-10.jpg" alt="Audi A7 nakon obrade laka" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open1 }}" aria-label="Otvori sliku — Crni Audi pod hex rasvjetom">
+        <img src="img/gal-14.jpg" alt="Crni Audi pod hex rasvjetom nakon zaštite laka" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open2 }}" aria-label="Otvori sliku — BMW X5 nakon keramičke zaštite">
+        <img src="img/gal-01.jpg" alt="BMW X5 nakon keramičke zaštite" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open3 }}" aria-label="Otvori sliku — Detalji interijera nakon čišćenja">
+        <img src="img/gal-11.jpg" alt="Detalji interijera nakon čišćenja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open4 }}" aria-label="Otvori sliku — Porsche Cayenne interijer">
+        <img src="img/gal-16.jpg" alt="Porsche Cayenne interijer nakon dubinskog čišćenja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open5 }}" aria-label="Otvori sliku — Detalj haube nakon poliranja">
+        <img src="img/gal-02.jpg" alt="Detalj haube nakon poliranja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open6 }}" aria-label="Otvori sliku — Range Rover hauba">
+        <img src="img/gal-03.jpg" alt="Range Rover hauba pod hex rasvjetom" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open7 }}" aria-label="Otvori sliku — Motorni prostor nakon čišćenja">
+        <img src="img/gal-13.jpg" alt="Motorni prostor nakon čišćenja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open8 }}" aria-label="Otvori sliku — Range Rover bočna strana">
+        <img src="img/gal-04.jpg" alt="Range Rover bočna strana nakon obrade" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open9 }}" aria-label="Otvori sliku — Porsche nakon poliranja laka">
+        <img src="img/gal-05.jpg" alt="Porsche nakon poliranja laka" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open10 }}" aria-label="Otvori sliku — Mercedes interijer">
+        <img src="img/gal-12.jpg" alt="Mercedes interijer nakon dubinskog čišćenja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open11 }}" aria-label="Otvori sliku — Crni BMW nakon zaštite laka">
+        <img src="img/gal-06.jpg" alt="Crni BMW nakon zaštite laka" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open12 }}" aria-label="Otvori sliku — Crna hauba s odsjajem">
+        <img src="img/gal-07.jpg" alt="Crna hauba s odsjajem hex rasvjete" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open13 }}" aria-label="Otvori sliku — Bočna strana nakon poliranja">
+        <img src="img/gal-08.jpg" alt="Bočna strana nakon poliranja" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+      <button class="tile" data-reveal type="button" onClick="{{ open14 }}" aria-label="Otvori sliku — Audi SQ7 u radionici">
+        <img src="img/gal-09.jpg" alt="Audi SQ7 u radionici" loading="lazy" data-gallery-tile="1" style="display:block;width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:#1A1A1A;transition:transform 600ms cubic-bezier(.22,.61,.36,1),filter 400ms ease;">
+        <span class="tile-zoom"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"></path></svg></span>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px 40px;margin-top:clamp(40px,4.4vw,64px);padding-top:clamp(28px,3vw,40px);border-top:1px solid #232322;">
+      <p style="margin:0;font-size:clamp(18px,1.9vw,26px);line-height:1.3;font-weight:600;color:#F5F5F5;text-wrap:balance;">Želiš da tvoj auto bude sljedeći?</p>
+      <a class="btn-y" href="tel:+38761111222" style="flex:none;display:inline-flex;align-items:center;justify-content:center;height:52px;padding:0 32px;border-radius:999px;background:#FFF521;color:#111111;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">Pozovi</a>
+    </div>
+  </div>
+
+  <sc-if value="{{ lbOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="lb" role="dialog" aria-modal="true" aria-label="Pregled slike" onClick="{{ closeLb }}">
+      <button class="lb-btn" type="button" aria-label="Zatvori" onClick="{{ closeLb }}" style="position:absolute;top:24px;right:24px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </button>
+      <figure class="lb-fig" onClick="{{ stopClick }}">
+        <img src="{{ lbSrc }}" alt="{{ lbTitle }}">
+        <figcaption style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:20px;">
+          <span style="display:flex;flex-direction:column;gap:4px;text-align:left;">
+            <span style="font-size:16px;line-height:24px;font-weight:600;color:#F5F5F5;">{{ lbTitle }}</span>
+            <span style="font-size:13px;line-height:16px;letter-spacing:0.08em;color:#5F5E5B;">{{ lbIndex }}</span>
+          </span>
+          <span style="display:flex;align-items:center;gap:12px;flex:none;">
+            <button class="lb-btn" type="button" aria-label="Prethodna slika" onClick="{{ lbPrev }}">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none" style="display:block;transform:scaleX(-1);"><path d="M1 6h15M11 1.4 16.4 6 11 10.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+            <button class="lb-btn" type="button" aria-label="Sljedeća slika" onClick="{{ lbNext }}">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none" style="display:block;"><path d="M1 6h15M11 1.4 16.4 6 11 10.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;minTileWidth&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:440,&quot;min&quot;:260,&quot;max&quot;:620,&quot;step&quot;:20,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Galerija&quot;},&quot;tileShape&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Pejzaž 4:3&quot;,&quot;options&quot;:[&quot;Pejzaž 4:3&quot;,&quot;Kvadrat 1:1&quot;,&quot;Portret 3:4&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Galerija&quot;},&quot;cornerRadius&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:16,&quot;step&quot;:1,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Galerija&quot;},&quot;hoverZoom&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Galerija&quot;}}">
+class Component extends DCLogic {
+  state = { lb: -1, menu: false };
+
+  componentDidMount() {
+    this.applyTweaks();
+    this.scan();
+    this.t1 = setTimeout(() => this.scan(), 500);
+    this.onKey = e => {
+      if (this.state.lb < 0) return;
+      if (e.key === 'Escape') this.setLb(-1);
+      if (e.key === 'ArrowLeft') this.stepLb(-1);
+      if (e.key === 'ArrowRight') this.stepLb(1);
+    };
+    window.addEventListener('keydown', this.onKey);
+  }
+
+  componentDidUpdate() { this.applyTweaks(); this.scan(); }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKey);
+    clearTimeout(this.t1);
+    document.body.style.overflow = '';
+  }
+
+  shots() {
+    return Array.from(document.querySelectorAll('[data-gallery-tile]')).map(img => ({
+      src: img.getAttribute('src'),
+      title: img.getAttribute('alt') || ''
+    }));
+  }
+
+  cache() {
+    if (!this._shots || !this._shots.length) this._shots = this.shots();
+    return this._shots;
+  }
+
+  setLb(i) {
+    this.cache();
+    this.setState({ lb: i });
+    document.body.style.overflow = i >= 0 ? 'hidden' : '';
+  }
+
+  stepLb(dir) {
+    const n = this.cache().length || 1;
+    this.setState(s => ({ lb: (s.lb + dir + n) % n }));
+  }
+
+  scan() {
+    const nodes = document.querySelectorAll('[data-reveal]:not([data-seen])');
+    if (!nodes.length) return;
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach(el => { el.setAttribute('data-seen', '1'); el.classList.add('in'); });
+      return;
+    }
+    if (!this.io) {
+      this.io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (!en.isIntersecting) return;
+          en.target.classList.add('in');
+          this.io.unobserve(en.target);
+        });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.1 });
+    }
+    nodes.forEach(el => {
+      el.setAttribute('data-seen', '1');
+      const par = el.parentElement;
+      if (par) {
+        const sibs = Array.from(par.children).filter(c => c.hasAttribute && c.hasAttribute('data-reveal'));
+        el.style.transitionDelay = Math.min(Math.max(0, sibs.indexOf(el)) % 3, 3) * 90 + 'ms';
+      }
+      this.io.observe(el);
+    });
+  }
+
+  applyTweaks() {
+    const radius = this.props.cornerRadius ?? 0;
+    const shape = this.props.tileShape ?? 'Pejzaž 4:3';
+    const minTile = this.props.minTileWidth ?? 440;
+    const zoom = this.props.hoverZoom ?? true;
+    const ratio = shape === 'Kvadrat 1:1' ? '1/1' : shape === 'Portret 3:4' ? '3/4' : '4/3';
+    const grid = document.querySelector('[data-gallery-grid]');
+    if (grid) grid.style.gridTemplateColumns = 'repeat(auto-fill,minmax(min(100%,' + minTile + 'px),1fr))';
+    document.querySelectorAll('.tile').forEach(t => { t.style.borderRadius = radius + 'px'; });
+    document.querySelectorAll('[data-gallery-tile]').forEach(el => {
+      el.style.borderRadius = radius + 'px';
+      el.style.aspectRatio = ratio;
+      const tile = el.closest('.tile');
+      if (this.zoomBound !== zoom && tile) {
+        tile.onpointerenter = zoom ? () => { el.style.transform = 'scale(1.045)'; } : null;
+        tile.onpointerleave = zoom ? () => { el.style.transform = 'scale(1)'; } : null;
+        if (!zoom) el.style.transform = 'scale(1)';
+      }
+    });
+    this.zoomBound = zoom;
+  }
+
+  renderVals() {
+    const v = {};
+    for (let i = 0; i < 15; i++) v['open' + i] = () => this.setLb(i);
+    const list = this._shots || [];
+    const i = this.state.lb;
+    const shot = i >= 0 ? list[i] : null;
+    v.lbOpen = i >= 0 && !!shot;
+    v.lbSrc = shot ? shot.src : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    v.lbTitle = shot ? shot.title : '';
+    v.lbIndex = shot ? String(i + 1).padStart(2, '0') + ' / ' + String(list.length).padStart(2, '0') : '';
+    v.closeLb = () => this.setLb(-1);
+    v.lbPrev = e => { e.stopPropagation(); this.stepLb(-1); };
+    v.lbNext = e => { e.stopPropagation(); this.stepLb(1); };
+    v.stopClick = e => e.stopPropagation();
+    v.menuOpen = this.state.menu ? 'true' : 'false';
+    v.toggleMenu = () => { const m = !this.state.menu; this.setState({ menu: m }); document.body.style.overflow = m ? 'hidden' : ''; };
+    v.closeMenu = () => { this.setState({ menu: false }); document.body.style.overflow = ''; };
+    return v;
+  }
+}
+</script>
+</body>
+</html>

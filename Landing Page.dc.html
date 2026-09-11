@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 56"><rect width="120" height="56" fill="#111111"></rect><text x="60" y="32" font-family="sans-serif" font-size="14" font-weight="700" font-style="italic" fill="#FFF521" text-anchor="middle">BUCO</text></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<style>
+  body{margin:0;background:#111111;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  *{-webkit-tap-highlight-color:transparent}
+  a{color:#FFF521;text-decoration:none}
+  a:hover{text-decoration:none}
+
+  .nav-link{position:relative;color:#AEAC9D;font-size:15px;line-height:20px;font-weight:500;text-decoration:none;transition:color .3s ease;white-space:nowrap}
+  .nav-link::after{content:'';position:absolute;left:0;bottom:-8px;height:2px;width:100%;background:#FFF521;border-radius:2px;transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.22,.61,.36,1)}
+  .nav-link:hover{color:#F5F5F5}
+  .nav-link:hover::after{transform:scaleX(1)}
+  .nav-on{color:#FFF521}
+  .nav-on:hover{color:#FFF521}
+  .nav-on::after{transform:scaleX(1)}
+
+  .hd{position:sticky;top:0;z-index:60;height:92px;background:rgba(17,17,17,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:height .45s cubic-bezier(.22,.61,.36,1),background-color .45s ease,border-color .45s ease;border-bottom:1px solid rgba(255,255,255,0)}
+  .hd[data-scrolled="true"]{height:72px;background:rgba(13,13,13,0.88);border-bottom-color:#232322}
+
+  .burger{display:none;appearance:none;border:0;background:transparent;width:48px;height:48px;padding:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+  .burger span{display:block;width:24px;height:2px;background:#F5F5F5;border-radius:2px;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .25s ease}
+  .burger[data-open="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .burger[data-open="true"] span:nth-child(2){opacity:0}
+  .burger[data-open="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+  .menu{display:none;position:fixed;left:0;right:0;top:0;z-index:55;padding:96px 20px 40px;box-sizing:border-box;background:#0E0E0E;flex-direction:column;transform:translateY(-102%);opacity:0;visibility:hidden;transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .35s ease,visibility .35s}
+  .menu[data-open="true"]{transform:none;opacity:1;visibility:visible}
+  .menu a.m-link{display:block;padding:16px 0;border-bottom:1px solid #232322;font-size:22px;line-height:28px;font-weight:600;color:#F5F5F5;transition:color .3s ease,padding-left .3s ease}
+  .menu a.m-link:hover{color:#FFF521;padding-left:8px}
+
+  .btn-outline{position:relative;overflow:hidden;background-image:linear-gradient(90deg,#FFF521,#FFF521);background-repeat:no-repeat;background-position:left center;background-size:0% 100%;transition:background-size .5s cubic-bezier(.22,.61,.36,1),color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-outline:hover{background-size:100% 100%;color:#111111;transform:translateY(-2px)}
+  .btn-y,.btn-cta{position:relative;overflow:hidden;isolation:isolate}
+  .btn-y::after,.btn-cta::after{content:"";position:absolute;top:-60%;bottom:-60%;left:-70%;width:44%;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.62) 50%,rgba(255,255,255,0) 100%);transform:translate3d(0,0,0) rotate(10deg);opacity:0;transition:transform 1s cubic-bezier(.3,.7,.3,1),opacity .3s ease}
+  .btn-y:hover::after,.btn-cta:hover::after{transform:translate3d(420%,0,0) rotate(10deg);opacity:1}
+  .btn-y{transition:background-color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-y:hover{background:#F7EA12;transform:translateY(-2px)}
+  .btn-cta{transition:background-color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-cta:hover{background:#F7EA12;transform:translateY(-2px)}
+  .btn-y svg,.btn-ghost svg{transition:transform .45s cubic-bezier(.22,.61,.36,1)}
+  .btn-y:hover svg,.btn-ghost:hover svg{transform:translateX(4px)}
+  .btn-ghost{position:relative;overflow:hidden;background-image:linear-gradient(90deg,rgba(255,255,255,0.07),rgba(255,255,255,0.07));background-repeat:no-repeat;background-position:left center;background-size:0% 100%;transition:background-size .5s cubic-bezier(.22,.61,.36,1),border-color .35s ease,color .35s ease,transform .35s cubic-bezier(.22,.61,.36,1)}
+  .btn-ghost:hover{background-size:100% 100%;border-color:#8C8B86;color:#F5F5F5;transform:translateY(-2px)}
+  [data-nav] svg{transition:transform .4s cubic-bezier(.22,.61,.36,1)}
+  [data-nav="next"]:hover svg{transform:translateX(3px)}
+  [data-nav="prev"]:hover svg{transform:scaleX(-1) translateX(3px)}
+
+  html{scroll-behavior:smooth}
+  section[id],div[id]{scroll-margin-top:104px}
+
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .marquee-track{display:flex;align-items:center;gap:clamp(56px,5.5vw,92px);width:max-content;animation:marquee 44s linear infinite;will-change:transform}
+  .brand{flex:none;display:flex;align-items:center;justify-content:center;height:72px}
+  .brand img{display:block;width:auto;opacity:.78;transition:opacity .4s ease,filter .4s ease}
+  .marquee-wrap:hover .brand img{opacity:.5}
+  .brand img:hover{opacity:1}
+
+  [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)}
+  [data-reveal].in{opacity:1;transform:none}
+
+  .svc{position:relative;display:block;width:100%;margin:0;padding:0;border:0;border-radius:4px;overflow:hidden;background:#161616;color:inherit;text-align:left;transition:box-shadow .6s ease,opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)}
+  .svc::before{content:"";position:absolute;top:-60%;bottom:-60%;left:-80%;width:62%;z-index:2;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.06) 36%,rgba(255,255,255,0.24) 50%,rgba(255,255,255,0.06) 64%,rgba(255,255,255,0) 100%);transform:translate3d(0,0,0) rotate(10deg);opacity:0;transition:transform 1.1s cubic-bezier(.3,.7,.3,1),opacity .35s ease}
+  .svc:hover::before,.svc:focus-within::before{transform:translate3d(310%,0,0) rotate(10deg);opacity:1}
+  .svc-img{position:absolute;inset:0;background-size:cover;background-position:center;}
+  .svc-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,0.92) 0%,rgba(10,10,10,0.64) 32%,rgba(10,10,10,0.2) 60%,rgba(10,10,10,0) 88%);transition:opacity .5s ease}
+  .svc-rule{display:block;width:32px;height:2px;background:#FFF521;}
+
+  .ba{transition:box-shadow .45s ease}
+  .ba:hover,.ba:focus-visible{box-shadow:0 0 0 1px rgba(255,245,33,0.35),0 24px 48px rgba(0,0,0,0.45)}
+
+  .soc{transition:transform .35s cubic-bezier(.22,.61,.36,1),opacity .3s ease}
+  .soc:hover{transform:translateY(-4px);opacity:.6}
+  .flink{transition:opacity .3s ease}
+  .flink:hover{opacity:.55}
+
+  @keyframes lbIn{from{opacity:0}to{opacity:1}}
+  @keyframes lbPop{from{opacity:0;transform:scale(.96) translateY(12px)}to{opacity:1;transform:none}}
+  .lb{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(8,8,8,0.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:lbIn .3s ease both}
+  .lb-fig{position:relative;margin:0;width:100%;max-width:1120px;animation:lbPop .5s cubic-bezier(.22,.61,.36,1) both}
+  .lb-fig img{display:block;width:100%;max-height:72vh;object-fit:contain;border-radius:4px}
+  .lb-btn{appearance:none;width:48px;height:48px;padding:0;border-radius:50%;border:1px solid #2A2A28;background:rgba(20,20,20,0.8);color:#AEAC9D;display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;transition:color .3s ease,border-color .3s ease,transform .3s cubic-bezier(.22,.61,.36,1)}
+  .lb-btn:hover{color:#FFF521;border-color:rgba(255,245,33,0.55);transform:scale(1.06)}
+
+  @media (max-width:1000px){
+    .svc{grid-column:span 6 !important}
+  }
+  @media (max-width:900px){
+    .nav-desk{display:none !important}
+    .hd-cta{display:none !important}
+    .burger{display:flex}
+    .menu{display:flex}
+    .hd{height:72px}
+    .hero{margin-top:-72px !important;min-height:648px !important}
+    .hero-in{min-height:648px !important;padding:120px 20px 64px !important}
+  }
+  @media (max-width:680px){
+    .svc{grid-column:span 12 !important;min-height:248px !important}
+    .sec-pad{padding-top:64px !important;padding-bottom:64px !important}
+    .lb{padding:16px}
+  }
+  @media (max-width:480px){
+    .hero{min-height:600px !important}
+    .hero-in{min-height:600px !important;padding:104px 16px 48px !important}
+    .hero-in h1{font-size:31px !important;line-height:1.09 !important;letter-spacing:-0.02em !important}
+    .hero-in p{font-size:14.5px !important;line-height:1.55 !important;color:#E4E2D6 !important}
+    .hero-in h1{text-shadow:0 2px 24px rgba(0,0,0,0.55)}
+    .hero-in > div > div:last-child{margin-top:40px !important;gap:10px !important}
+    .hero-in a.btn-y,.hero-in a.btn-ghost{width:100%;justify-content:center;height:50px !important;padding:0 20px !important;font-size:13px !important}
+    .hero-in a.btn-ghost{border-color:#8C8B86 !important}
+    .sec-pad{padding-left:16px !important;padding-right:16px !important;padding-top:48px !important;padding-bottom:48px !important}
+    .sec-pad h2{font-size:28px !important;line-height:1.1 !important}
+    .marquee-wrap{padding:13px 0 17px !important}
+    .brand{height:48px;}
+    .brand img{height:19px !important;max-height:none;width:auto}
+    .brand img[src*="carpro"]{height:27px !important}
+    .brand img[src*="koch-chemie"]{height:20px !important}
+    .brand img[src*="hendlex"]{height:21px !important}
+    .brand img[src*="chemical-guys"]{height:48px !important}
+    .brand img[src*="auto-finesse"]{height:46px !important}
+    .marquee-track{gap:36px !important}
+    #usluge [data-reveal]{opacity:1 !important;transform:none !important;transition:none !important}
+    .svc::before{display:none !important}
+    #recenzije [data-nav]{display:none !important}
+    #recenzije [data-nav] + div{display:none !important}
+    #recenzije .dots{display:flex !important;gap:2px !important}
+    #recenzije .dots button{width:20px !important;height:24px !important}
+    [data-carousel-track]{height:200px !important}
+    [data-carousel] p{font-size:18px !important}
+    #zakazi h2{font-size:30px !important;line-height:1.06 !important}
+    #zakazi p{font-size:14.5px !important;color:#2A2A29 !important}
+    [data-cta-body]{padding-left:16px !important;padding-right:16px !important;padding-top:52px !important;padding-bottom:60px !important;background:linear-gradient(180deg,rgba(252,252,252,0.92) 0%,rgba(250,250,250,0.85) 60%,rgba(245,245,246,0.65) 100%)}
+    #zakazi footer > div{justify-content:center !important;text-align:center;padding-left:16px !important;padding-right:16px !important}
+    #zakazi footer nav{justify-content:center !important;gap:14px 20px !important}
+    #zakazi footer > div > div:last-child{flex-direction:column !important;gap:18px !important;align-items:center !important}
+    .menu{padding:88px 16px 32px !important}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .marquee-track{animation:none}
+    html{scroll-behavior:auto}
+    [data-reveal]{opacity:1;transform:none;transition:none}
+  }
+</style>
+</helmet>
+
+<div style="width:100%;background:#111111;color:#F5F5F5;overflow:hidden;">
+
+<header class="hd" data-scrolled="{{ scrolled }}">
+  <div style="max-width:1440px;height:100%;margin:0 auto;padding:0 20px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+    <a href="#vrh" style="display:flex;flex-direction:column;gap:4px;text-decoration:none;flex:none;">
+      <span style="font-size:26px;line-height:26px;font-weight:800;font-style:italic;letter-spacing:0.02em;color:#F5F5F5;">BUCO</span>
+      <span style="display:block;width:100%;height:1px;background:#5F5E5B;"></span>
+      <span style="font-size:9px;line-height:12px;font-weight:600;letter-spacing:0.26em;color:#AEAC9D;">CAR DETAILING STUDIO</span>
+    </a>
+    <nav class="nav-desk" style="display:flex;align-items:center;gap:clamp(20px,2.4vw,32px);min-width:0;">
+      <a class="nav-link nav-on" href="#vrh">Početna</a>
+      <a class="nav-link" href="#usluge">Usluge</a>
+      <a class="nav-link" href="#galerija">Prije i poslije</a>
+      <a class="nav-link" href="Galerija.dc.html">Galerija</a>
+      <a class="nav-link" href="#recenzije">Recenzije</a>
+      <a class="nav-link" href="#zakazi">Kontakt</a>
+    </nav>
+    <a class="btn-y hd-cta" href="tel:+38761111222" style="display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border-radius:999px;border:1px solid #FFF521;background:#FFF521;color:#111111;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;flex:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+      POZOVI
+    </a>
+    <button class="burger" type="button" aria-label="Otvori meni" data-open="{{ menuOpen }}" onClick="{{ toggleMenu }}">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="menu" data-open="{{ menuOpen }}">
+  <a class="m-link" href="#vrh" onClick="{{ closeMenu }}">Početna</a>
+  <a class="m-link" href="#usluge" onClick="{{ closeMenu }}">Usluge</a>
+  <a class="m-link" href="#galerija" onClick="{{ closeMenu }}">Prije i poslije</a>
+  <a class="m-link" href="Galerija.dc.html" onClick="{{ closeMenu }}">Galerija</a>
+  <a class="m-link" href="#recenzije" onClick="{{ closeMenu }}">Recenzije</a>
+  <a class="m-link" href="#zakazi" onClick="{{ closeMenu }}">Kontakt</a>
+  <a class="btn-y" href="tel:+38761111222" onClick="{{ closeMenu }}" style="margin-top:32px;display:inline-flex;align-items:center;justify-content:center;gap:12px;height:56px;border-radius:999px;background:#FFF521;color:#111111;font-size:14px;font-weight:700;letter-spacing:0.09em;text-decoration:none;">
+    061 111 222
+  </a>
+</div>
+
+<section class="hero" id="vrh" data-screen-label="Hero" style="position:relative;width:100%;min-height:800px;margin-top:-92px;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:url('img/hero.jpg');background-size:cover;background-position:72% center;filter:grayscale(.42) contrast(1.06) brightness(.94);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,#111111 0%,rgba(17,17,17,.98) 26%,rgba(17,17,17,.80) 41%,rgba(17,17,17,.24) 58%,rgba(17,17,17,0) 74%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,.62) 0%,rgba(17,17,17,0) 22%,rgba(17,17,17,0) 62%,rgba(17,17,17,.72) 100%);"></div>
+  <div class="hero-in" style="position:relative;max-width:1440px;min-height:800px;margin:0 auto;padding:164px 20px 72px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
+    <div style="display:flex;flex-direction:column;gap:clamp(24px,2.4vw,32px);max-width:660px;min-width:0;">
+      <div data-reveal="" style="display:flex;align-items:center;gap:20px;">
+        <span style="font-size:12px;line-height:16px;font-weight:600;letter-spacing:0.24em;color:#AEAC9D;white-space:nowrap;">PREMIUM AUTO DETAILING</span>
+        <span style="flex:1;max-width:112px;height:1px;background:#5F5E5B;"></span>
+      </div>
+      <h1 data-reveal="" style="margin:0;font-size:clamp(36px,4.7vw,64px);line-height:1.07;font-weight:700;letter-spacing:-0.025em;color:#F5F5F5;text-wrap:pretty;">Tvoj auto zaslužuje da izgleda kao <span style="position:relative;display:inline-block;color:#FFF521;">prvi dan.</span></h1>
+      <p data-reveal="" style="margin:0;font-size:clamp(16px,1.2vw,18px);line-height:1.62;font-weight:400;color:#AEAC9D;max-width:48ch;text-wrap:pretty;">Profesionalan detailing, vrhunska zaštita i besprijekoran izgled&nbsp; jer svaki detalj čini razliku.</p>
+      <div data-reveal="" style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:4px;">
+        <a class="btn-y" href="tel:+38761111222" style="display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 32px;border-radius:999px;background:#FFF521;color:#111111;font-size:14px;font-weight:700;letter-spacing:0.09em;text-decoration:none;">
+          POZOVI 061 111 222
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        </a>
+        <a class="btn-ghost" href="#usluge" style="display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 28px;border-radius:999px;border:1px solid #5F5E5B;background:transparent;color:#F5F5F5;font-size:14px;font-weight:700;letter-spacing:0.09em;text-decoration:none;">
+          POGLEDAJ USLUGE
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="width:100%;background:#111111;border-bottom:1px solid #313130;">
+  <div class="marquee-wrap" style="position:relative;width:100%;overflow:hidden;padding:24px 0 32px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);">
+    <div class="marquee-track">
+      <div class="brand"><img src="logos/w-carpro.png" alt="CarPro" style="height:32px;"></div>
+      <div class="brand"><img src="logos/w-koch-chemie.png" alt="Koch-Chemie" style="height:20px;"></div>
+      <div class="brand"><img src="logos/w-auto-finesse.png" alt="Auto Finesse" style="height:72px;"></div>
+      <div class="brand"><img src="logos/w-gyeon.png" alt="GYEON" style="height:24px;"></div>
+      <div class="brand"><img src="logos/w-chemical-guys.png" alt="Chemical Guys" style="height:64px;"></div>
+      <div class="brand"><img src="logos/w-sonax.png" alt="SONAX" style="height:20px;"></div>
+      <div class="brand"><img src="logos/w-hendlex.png" alt="Hendlex" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-carpro.png" alt="" style="height:32px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-koch-chemie.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-auto-finesse.png" alt="" style="height:72px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-gyeon.png" alt="" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-chemical-guys.png" alt="" style="height:64px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-sonax.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-hendlex.png" alt="" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-carpro.png" alt="" style="height:32px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-koch-chemie.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-auto-finesse.png" alt="" style="height:72px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-gyeon.png" alt="" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-chemical-guys.png" alt="" style="height:64px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-sonax.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-hendlex.png" alt="" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-carpro.png" alt="" style="height:32px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-koch-chemie.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-auto-finesse.png" alt="" style="height:72px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-gyeon.png" alt="" style="height:24px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-chemical-guys.png" alt="" style="height:64px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-sonax.png" alt="" style="height:20px;"></div>
+      <div class="brand" aria-hidden="true"><img src="logos/w-hendlex.png" alt="" style="height:24px;"></div>
+    </div>
+  </div>
+</section>
+
+<section id="o-meni" data-screen-label="O meni" style="width:100%;background:#111111;">
+  <div class="sec-pad" style="max-width: 1440px; margin: 0 auto; padding: clamp(64px,7vw,104px) 20px; box-sizing: border-box; padding-top: 46px; padding-bottom: 46px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(40px,6vw,96px);align-items:center;">
+      <div data-reveal="" style="position:relative;min-width:0;">
+        <div style="aspect-ratio:1/1;border-radius:4px;background-color:#1A1A1A;background-image:url('img/o-meni-buco.jpg');background-size:cover;background-position:center;"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;min-width:0;">
+        <span data-reveal="" style="font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">O MENI</span>
+        <h2 data-reveal="" style="margin:0;font-size:clamp(32px,3.9vw,52px);line-height:1.14;font-weight:700;letter-spacing:0em;color:#FFFFFF;text-wrap:balance;">Jedan čovjek, jedan standard.</h2>
+        <div data-reveal="" style="display:flex;flex-direction:column;gap:16px;font-size:clamp(16px,1.2vw,17px);line-height:1.7;color:#AEAC9D;text-wrap:pretty;">
+          <p style="margin:0;">Ja sam Buco i iza svakog auta koji izađe iz moje radionice stojim lično. Volim da posao bude urađen kako treba, bez preskakanja koraka i bez žurbe samo da bi se završilo što prije.</p>
+          <p style="margin:0;">Bilo da je u pitanju dubinsko čišćenje, poliranje, zaštita laka ili kompletan detailing, cilj mi je uvijek isti: da auto nakon tretmana izgleda uredno, čisto i maksimalno dobro.</p>
+          <p style="margin:0;">Kod mene nema komplikovanja. Dogovorimo šta autu treba, odradim posao kako treba i vratim ti auto u stanju s kojim ćeš biti zadovoljan.</p>
+        </div>
+        <a class="btn-y" data-reveal="" href="tel:061111222" style="display:inline-flex;align-items:center;justify-content:center;gap:12px;height:56px;padding:0 32px;border-radius:999px;background:#FFF521;color:#111111;font-size:14px;font-weight:700;letter-spacing:0.09em;text-decoration:none;align-self:flex-start;margin-top:8px;">POZOVI ME</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="usluge" data-screen-label="Usluge" style="width:100%;background:#111111;border-top:1px solid #313130;">
+  <div class="sec-pad" style="max-width:1440px;margin:0 auto;padding:clamp(40px,4vw,56px) 20px clamp(64px,7vw,104px);box-sizing:border-box;">
+    <span data-reveal="" style="display:block;margin:0 0 12px;font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">USLUGE</span>
+    <h2 data-reveal="" style="margin:0 0 clamp(36px,3.6vw,52px);font-size:clamp(32px,3.9vw,52px);line-height:1.08;font-weight:700;letter-spacing:-0.01em;color:#F5F5F5;max-width:15ch;text-wrap:balance;">Premium usluge</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:16px;">
+        <div class="svc" data-reveal="" style="grid-column:span 7;min-height:320px;">
+          <span class="svc-img" style="background-image:url('img/usl-poliranje.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:24px;right:24px;bottom:24px;display:flex;flex-direction:column;gap:8px;max-width:420px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:24px;line-height:32px;font-weight:600;color:#F5F5F5;">Poliranje vozila</span>
+            <span style="font-size:14px;line-height:20px;color:#CFCDBF;">Višefazno poliranje koje uklanja swirl tragove i vraća dubinu boje.</span>
+          </span>
+        </div>
+        <div class="svc" data-reveal="" style="grid-column:span 5;min-height:320px;">
+          <span class="svc-img" style="background-image:url('img/usl-keramika.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:24px;right:24px;bottom:24px;display:flex;flex-direction:column;gap:8px;max-width:340px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:20px;line-height:28px;font-weight:600;color:#F5F5F5;">Keramička zaštita laka</span>
+            <span style="font-size:14px;line-height:20px;color:#CFCDBF;">Dugotrajna zaštita od ogrebotina, UV zraka i hemikalija.</span>
+          </span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:16px;">
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-polimerizacija.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Polimerizacija farova</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Zaštitni sloj koji čuva bistrinu i sprječava novo žućenje.</span>
+          </span>
+        </div>
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-poliranje-farova.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Poliranje farova</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Uklanja zamućenost i vraća bistrinu za bolju vidljivost.</span>
+          </span>
+        </div>
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-volan.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Farbanje i reparacija volana</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Obnova kože, uklanjanje habanja i povrat originalne boje.</span>
+          </span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:16px;">
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-pranje-vozila.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Dubinsko pranje</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Temeljno pranje karoserije, felgi i vanjskih površina.</span>
+          </span>
+        </div>
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-dubinsko-pranje.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Detaljno čišćenje unutrašnjosti</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Kompletna njega interijera za osjećaj novog vozila.</span>
+          </span>
+        </div>
+        <div class="svc" data-reveal="" style="grid-column:span 4;min-height:264px;">
+          <span class="svc-img" style="background-image:url('img/usl-motor.jpg');"></span>
+          <span class="svc-scrim"></span>
+          <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;">
+            <span class="svc-rule"></span>
+            <span style="font-size:18px;line-height:24px;font-weight:600;color:#F5F5F5;">Pranje motora</span>
+            <span style="font-size:13px;line-height:20px;color:#CFCDBF;">Sigurno čišćenje motornog prostora bez rizika po elektroniku.</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="galerija" data-screen-label="Prije i poslije" style="width:100%;background:#111111;border-top:1px solid #313130;">
+  <div class="sec-pad" style="max-width:1440px;margin:0 auto;padding:clamp(64px,7vw,104px) 20px;box-sizing:border-box;">
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:620px;margin-bottom:clamp(36px,3.6vw,52px);">
+      <span data-reveal="" style="font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">PRIJE I POSLIJE</span>
+      <h2 data-reveal="" style="margin:0;font-size:clamp(32px,3.9vw,52px);line-height:1.08;font-weight:700;letter-spacing:-0.01em;color:#F5F5F5;">Razlika koja se vidi</h2>
+      <p data-reveal="" style="margin:0;font-size:15px;line-height:1.55;color:#AEAC9D;">Povuci klizač lijevo i desno da vidiš stanje prije i poslije obrade.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,2.8vw,40px);">
+      <div data-reveal="" style="display:flex;flex-direction:column;gap:16px;min-width:0;">
+        <div class="ba" tabIndex="0" role="slider" aria-label="Prije i poslije — dubinsko čišćenje kabine" onPointerDown="{{ down0 }}" onKeyDown="{{ key0 }}" style="position:relative;aspect-ratio:1/1;border-radius:4px;overflow:hidden;background:#1A1A1A;touch-action:none;cursor:ew-resize;user-select:none;outline:none;">
+          <div style="position:absolute;inset:0;background-image:url('img/ba-kabina-poslije.jpg');background-size:cover;background-position:center;"></div>
+          <div style="position:absolute;inset:0;background-image:url('img/ba-kabina-prije.jpg');background-size:cover;background-position:center;clip-path:{{ clip0 }};"></div>
+          <div style="position:absolute;top:0;bottom:0;left:{{ left0 }};width:2px;margin-left:-1px;background:#FFF521;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center;">
+            <span style="flex:none;width:44px;height:44px;border-radius:999px;background:#FFF521;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid #111111;"></span>
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid #111111;"></span>
+            </span>
+          </div>
+        </div>
+        <span style="font-size:clamp(15px,1.2vw,17px);line-height:1.4;font-weight:600;color:#F5F5F5;">Dubinsko čišćenje kabine</span>
+      </div>
+      <div data-reveal="" style="display:flex;flex-direction:column;gap:16px;min-width:0;">
+        <div class="ba" tabIndex="0" role="slider" aria-label="Prije i poslije — poliranje farova" onPointerDown="{{ down1 }}" onKeyDown="{{ key1 }}" style="position:relative;aspect-ratio:1/1;border-radius:4px;overflow:hidden;background:#1A1A1A;touch-action:none;cursor:ew-resize;user-select:none;outline:none;">
+          <div style="position:absolute;inset:0;background-image:url('img/ba-far-poslije.jpg');background-size:cover;background-position:center;"></div>
+          <div style="position:absolute;inset:0;background-image:url('img/ba-far-prije.jpg');background-size:cover;background-position:center;clip-path:{{ clip1 }};"></div>
+          <div style="position:absolute;top:0;bottom:0;left:{{ left1 }};width:2px;margin-left:-1px;background:#FFF521;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center;">
+            <span style="flex:none;width:44px;height:44px;border-radius:999px;background:#FFF521;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid #111111;"></span>
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid #111111;"></span>
+            </span>
+          </div>
+        </div>
+        <span style="font-size:clamp(15px,1.2vw,17px);line-height:1.4;font-weight:600;color:#F5F5F5;">Poliranje farova</span>
+      </div>
+      <div data-reveal="" style="display:flex;flex-direction:column;gap:16px;min-width:0;">
+        <div class="ba" tabIndex="0" role="slider" aria-label="Prije i poslije — dubinsko pranje sjedišta" onPointerDown="{{ down2 }}" onKeyDown="{{ key2 }}" style="position:relative;aspect-ratio:1/1;border-radius:4px;overflow:hidden;background:#1A1A1A;touch-action:none;cursor:ew-resize;user-select:none;outline:none;">
+          <div style="position:absolute;inset:0;background-image:url('img/ba-sjedista-poslije.jpg');background-size:cover;background-position:center;"></div>
+          <div style="position:absolute;inset:0;background-image:url('img/ba-sjedista-prije.jpg');background-size:cover;background-position:center;clip-path:{{ clip2 }};"></div>
+          <div style="position:absolute;top:0;bottom:0;left:{{ left2 }};width:2px;margin-left:-1px;background:#FFF521;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center;">
+            <span style="flex:none;width:44px;height:44px;border-radius:999px;background:#FFF521;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid #111111;"></span>
+              <span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid #111111;"></span>
+            </span>
+          </div>
+        </div>
+        <span style="font-size:clamp(15px,1.2vw,17px);line-height:1.4;font-weight:600;color:#F5F5F5;">Dubinsko pranje sjedišta</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recenzije" data-screen-label="Recenzije" style="width:100%;background:#111111;border-top:1px solid #313130;">
+  <div class="sec-pad" data-carousel="arc" data-step="5200" style="max-width: 1440px; margin: 0 auto; padding: clamp(64px,7vw,104px) 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 82px; overflow: hidden; padding-top: 46px; padding-bottom: 46px">
+    <div data-reveal="" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <span style="font-size:13px;line-height:16px;font-weight:600;letter-spacing:0.14em;color:#FFF521;">RECENZIJE</span>
+      <h2 style="margin:0;font-size:clamp(28px,3.4vw,48px);line-height:1.08;font-weight:700;letter-spacing:-0.015em;color:#F5F5F5;">Šta kažu vozači</h2>
+    </div>
+    <div data-carousel-track="1" style="position:relative;width:100%;height:172px;">
+      <div data-ci="0" style="position:absolute;left:50%;top:50%;width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;gap:20px;will-change:transform;">
+        <div style="display:flex;gap:4px;color:#FFF521;font-size:16px;">★★★★★</div>
+        <p style="margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.4;font-weight:500;color:#F5F5F5;text-wrap:balance;">Auto sam ostavio prljav i izguljen, nisam mislio da se tu može puno. Vratili su mi ga kao nov, ozbiljno.</p>
+        <span style="font-size:15px;line-height:20px;color:#5F5E5B;">Amar H. — Živinice</span>
+      </div>
+      <div data-ci="1" style="position:absolute;left:50%;top:50%;width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;gap:20px;will-change:transform;">
+        <div style="display:flex;gap:4px;color:#FFF521;font-size:16px;">★★★★★</div>
+        <p style="margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.4;font-weight:500;color:#F5F5F5;text-wrap:balance;">Farovi su bili žuti kao limun, sada svijetle bolje nego kad sam kupio auto.</p>
+        <span style="font-size:15px;line-height:20px;color:#5F5E5B;">Nedim S. — Tuzla</span>
+      </div>
+      <div data-ci="2" style="position:absolute;left:50%;top:50%;width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;gap:20px;will-change:transform;">
+        <div style="display:flex;gap:4px;color:#FFF521;font-size:16px;">★★★★★</div>
+        <p style="margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.4;font-weight:500;color:#F5F5F5;text-wrap:balance;">Sjedišta su bila puna dlaka od psa. Nisam vjerovao da se to može izvaditi.</p>
+        <span style="font-size:15px;line-height:20px;color:#5F5E5B;">Elma K. — Lukavac</span>
+      </div>
+      <div data-ci="3" style="position:absolute;left:50%;top:50%;width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;gap:20px;will-change:transform;">
+        <div style="display:flex;gap:4px;color:#FFF521;font-size:16px;">★★★★★</div>
+        <p style="margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.4;font-weight:500;color:#F5F5F5;text-wrap:balance;">Došao sam samo na pranje, ostao na keramici. Vidi se da čovjek zna šta radi.</p>
+        <span style="font-size:15px;line-height:20px;color:#5F5E5B;">Damir P. — Kalesija</span>
+      </div>
+      <div data-ci="4" style="position:absolute;left:50%;top:50%;width:min(560px,86vw);display:flex;flex-direction:column;align-items:center;gap:20px;will-change:transform;">
+        <div style="display:flex;gap:4px;color:#FFF521;font-size:16px;">★★★★★</div>
+        <p style="margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.4;font-weight:500;color:#F5F5F5;text-wrap:balance;">Javio mi je svaki korak i vratio auto na vrijeme. Rijetko danas.</p>
+        <span style="font-size:15px;line-height:20px;color:#5F5E5B;">Ismar B. — Živinice</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:clamp(20px,2vw,28px);">
+      <button type="button" data-nav="prev" aria-label="Prethodna recenzija" style="appearance:none;width:52px;height:52px;padding:0;border-radius:50%;border:1px solid #2A2A28;background:#151515;color:#AEAC9D;display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;transition:transform 160ms cubic-bezier(.23,1,.32,1),color 200ms ease,border-color 200ms ease,background-color 200ms ease;" style-hover="color:#FFF521;border-color:rgba(255,245,33,0.55);background:#1B1B18;" style-active="transform:scale(0.96);" style-focus="border-color:#FFF521;box-shadow:0 0 0 3px rgba(255,245,33,0.16);">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true" style="display:block;transform:scaleX(-1);"><path d="M1 6h15M11 1.4 16.4 6 11 10.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+      <div style="display:flex;align-items:center;gap:16px;">
+        
+        <span style="position:relative;display:block;width:clamp(64px,7vw,96px);height:1px;background:#2A2A28;">
+          <span data-progress="1" style="position:absolute;left:0;top:0;height:1px;width:20%;background:#FFF521;transition:width 320ms cubic-bezier(.23,1,.32,1);"></span>
+        </span>
+        
+      </div>
+      <button type="button" data-nav="next" aria-label="Sljedeća recenzija" style="appearance:none;width:52px;height:52px;padding:0;border-radius:50%;border:1px solid #2A2A28;background:#151515;color:#AEAC9D;display:flex;align-items:center;justify-content:center;cursor:pointer;outline:none;transition:transform 160ms cubic-bezier(.23,1,.32,1),color 200ms ease,border-color 200ms ease,background-color 200ms ease;" style-hover="color:#FFF521;border-color:rgba(255,245,33,0.55);background:#1B1B18;" style-active="transform:scale(0.96);" style-focus="border-color:#FFF521;box-shadow:0 0 0 3px rgba(255,245,33,0.16);">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true" style="display:block;"><path d="M1 6h15M11 1.4 16.4 6 11 10.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </div>
+    <div class="dots" style="display:none;align-items:center;justify-content:center;gap:10px;">
+      <button type="button" data-dot="0" aria-label="Recenzija 1" style="appearance:none;width:28px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="display:block;width:8px;height:8px;border-radius:50%;background:#3A3A37;transition:background-color .3s ease,transform .3s ease;"></span></button>
+      <button type="button" data-dot="1" aria-label="Recenzija 2" style="appearance:none;width:28px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="display:block;width:8px;height:8px;border-radius:50%;background:#3A3A37;transition:background-color .3s ease,transform .3s ease;"></span></button>
+      <button type="button" data-dot="2" aria-label="Recenzija 3" style="appearance:none;width:28px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="display:block;width:8px;height:8px;border-radius:50%;background:#3A3A37;transition:background-color .3s ease,transform .3s ease;"></span></button>
+      <button type="button" data-dot="3" aria-label="Recenzija 4" style="appearance:none;width:28px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="display:block;width:8px;height:8px;border-radius:50%;background:#3A3A37;transition:background-color .3s ease,transform .3s ease;"></span></button>
+      <button type="button" data-dot="4" aria-label="Recenzija 5" style="appearance:none;width:28px;height:28px;padding:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="display:block;width:8px;height:8px;border-radius:50%;background:#3A3A37;transition:background-color .3s ease,transform .3s ease;"></span></button>
+    </div>
+  </div>
+</section>
+
+<section id="zakazi" data-screen-label="CTA" style="width:100%;background:#111111;">
+  <div style="position:relative;width:100%;overflow:hidden;background:linear-gradient(158deg,#FCFCFC 0%,#F8F8F8 42%,#F1F1F2 100%);">
+    
+    <div style="position:absolute;inset:0;background-image:url('img/cta-car.jpg');background-size:cover;background-position:right center;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(252,252,252,0.64) 0%,rgba(252,252,252,0.5) 34%,rgba(252,252,252,0) 58%,rgba(252,252,252,0) 78%);"></div>
+    <div data-cta-body="1" style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(76px,6.6vw,108px) 20px clamp(96px,8.2vw,128px);box-sizing:border-box;">
+      <span data-reveal="" style="width:36px;height:4px;background:#FFF521;"></span>
+      <p data-reveal="" style="margin: clamp(8px,1.1vw,16px) 0 0; font-size: 14px; line-height: 16px; font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase; color: #121312">Buco Auto Detailing</p>
+      <h2 data-reveal="" style="margin:clamp(24px,2.6vw,40px) 0 0;font-size:clamp(38px,5.4vw,84px);line-height:1;font-weight:700;letter-spacing:0em;color:#121312;text-wrap:balance;">Spreman da tvoje auto<br>ponovo izgleda <span style="color: #121312">najbolje?</span></h2>
+      <p data-reveal="" style="margin: 24px 0 0; font-size: clamp(15px,1.35vw,19px); line-height: 1.4; font-weight: 400; color: #3A3A3A; margin-top: 42px">Nazovi nas i dogovorimo termin u par minuta.<br>Čistiji, ljepši i zaštićen – spreman za nove kilometre.</p>
+      <a class="btn-cta" data-reveal="" href="tel:+38761111222" style="margin-top:clamp(28px,3.4vw,48px);display:inline-flex;align-items:center;justify-content:center;width:248px;height:58px;border-radius:999px;background:#FFF521;color:#121312;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">Pozovi</a>
+    </div>
+
+  <footer style="position:relative;z-index:2;width:100%;border-top:1px solid rgba(18,19,18,0.18);">
+    <div style="max-width:1440px;margin:0 auto;padding:clamp(32px,3.2vw,44px) 20px clamp(32px,3.4vw,52px);box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px 40px;color:#121312;">
+      <nav style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,3vw,48px);">
+        <a class="flink" href="#vrh" style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#121312;text-decoration:none;">Početna</a>
+        <a class="flink" href="#usluge" style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#121312;text-decoration:none;">Usluge</a>
+        <a class="flink" href="Galerija.dc.html" style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#121312;text-decoration:none;">Galerija</a>
+        <a class="flink" href="#zakazi" style="font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#121312;text-decoration:none;">Kontakt</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:clamp(24px,3vw,48px);">
+        <div style="display:flex;align-items:center;gap:clamp(24px,2.4vw,40px);color:#121312;">
+          <a class="soc" href="https://instagram.com/auto_detailing_buco" aria-label="Instagram" style="display:flex;color:#121312;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4.5"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg></a>
+          <a class="soc" href="#" aria-label="Facebook" style="display:flex;color:#121312;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"></path></svg></a>
+          <a class="soc" href="#" aria-label="TikTok" style="display:flex;color:#121312;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.6 2.6 0 0 1-2.6-2.6 2.6 2.6 0 0 1 3.4-2.47V9.66a5.75 5.75 0 0 0-.8-.06 5.7 5.7 0 0 0-5.7 5.7 5.7 5.7 0 0 0 5.7 5.7 5.7 5.7 0 0 0 5.7-5.7V9.05a7.35 7.35 0 0 0 4.3 1.38V7.35a4.3 4.3 0 0 1-3.26-1.53z"></path></svg></a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:16px;color:#3A3A3A;">
+          <span>© 2025 BUCO Auto Detailing</span>
+          <span>Sva prava zadržana.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  </div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { pos: [50, 50, 50], menu: false, scrolled: false };
+
+
+  setFrom(i, el, clientX) {
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (!r.width) return;
+    const p = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+    const pos = this.state.pos.slice();
+    pos[i] = p;
+    this.setState({ pos });
+  }
+
+  down(i, e) {
+    const el = e.currentTarget;
+    e.preventDefault();
+    if (el.focus) el.focus();
+    this.setFrom(i, el, e.clientX);
+    const move = ev => this.setFrom(i, el, ev.clientX);
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  }
+
+  key(i, e) {
+    const step = e.key === 'ArrowLeft' ? -4 : e.key === 'ArrowRight' ? 4 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const pos = this.state.pos.slice();
+    pos[i] = Math.max(0, Math.min(100, pos[i] + step));
+    this.setState({ pos });
+  }
+
+  componentDidMount() {
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onScroll = () => {
+      const s = window.scrollY > 12;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.scan();
+    this.t1 = setTimeout(() => this.scan(), 400);
+    this.t2 = setTimeout(() => this.scan(), 1400);
+    requestAnimationFrame(() => this.setupCarousels());
+  }
+
+  componentDidUpdate() { this.scan(); }
+
+  componentWillUnmount() {
+    (this.rigs || []).forEach(r => clearInterval(r.timer));
+    window.removeEventListener('scroll', this.onScroll);
+    if (this.onResize) window.removeEventListener('resize', this.onResize);
+    clearTimeout(this.t1); clearTimeout(this.t2);
+    document.body.style.overflow = '';
+  }
+
+  scan() {
+    const nodes = document.querySelectorAll('[data-reveal]:not([data-seen])');
+    if (!nodes.length) return;
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach(el => { el.setAttribute('data-seen', '1'); el.classList.add('in'); });
+      return;
+    }
+    if (!this.io) {
+      this.io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (!en.isIntersecting) return;
+          en.target.classList.add('in');
+          this.io.unobserve(en.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    }
+    nodes.forEach(el => {
+      el.setAttribute('data-seen', '1');
+      const par = el.parentElement;
+      if (par) {
+        const sibs = Array.from(par.children).filter(c => c.hasAttribute && c.hasAttribute('data-reveal'));
+        const idx = Math.max(0, sibs.indexOf(el));
+        el.style.transitionDelay = Math.min(idx, 6) * 80 + 'ms';
+      }
+      this.io.observe(el);
+    });
+  }
+
+  lockBody(on) {
+    document.body.style.overflow = on ? 'hidden' : '';
+  }
+
+  setupCarousels() {
+    this.rigs = this.rigs || [];
+    document.querySelectorAll('[data-carousel]').forEach(root => {
+      if (root.__rig) return;
+      const items = Array.from(root.querySelectorAll('[data-ci]'));
+      if (!items.length) return;
+      const rig = { root, items, i: 0 };
+      root.__rig = rig;
+      items.forEach(el => {
+        el.style.transition = 'transform .9s cubic-bezier(.22,.61,.36,1), filter .9s ease, opacity .9s ease';
+      });
+      root.querySelectorAll('[data-nav]').forEach(btn => {
+        const act = () => { this.spin(rig, btn.dataset.nav === 'prev' ? -1 : 1); this.autoplay(rig); };
+        btn.addEventListener('click', act);
+        btn.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); }
+        });
+      });
+      root.querySelectorAll('[data-dot]').forEach(dot => {
+        dot.addEventListener('click', () => {
+          rig.i = parseInt(dot.dataset.dot, 10) % rig.items.length;
+          this.place(rig);
+          this.autoplay(rig);
+        });
+      });
+      const track = root.querySelector('[data-carousel-track]');
+      if (track) {
+        track.style.touchAction = 'pan-y';
+        let x0 = null, y0 = null;
+        track.addEventListener('touchstart', e => {
+          clearInterval(rig.timer);
+          x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+        }, { passive: true });
+        track.addEventListener('touchend', e => {
+          if (x0 === null) return;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - x0, dy = t.clientY - y0;
+          if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) this.spin(rig, dx < 0 ? 1 : -1);
+          x0 = null; this.autoplay(rig);
+        }, { passive: true });
+      }
+      root.addEventListener('pointerenter', () => clearInterval(rig.timer));
+      root.addEventListener('pointerleave', () => this.autoplay(rig));
+      this.place(rig);
+      this.autoplay(rig);
+      this.rigs.push(rig);
+      if (!this.onResize) {
+        this.onResize = () => (this.rigs || []).forEach(r => this.place(r));
+        window.addEventListener('resize', this.onResize);
+      }
+    });
+  }
+
+  autoplay(rig) {
+    clearInterval(rig.timer);
+    if (this.reduced) return;
+    const step = parseInt(rig.root.dataset.step || '5200', 10);
+    rig.timer = setInterval(() => this.spin(rig, 1), step);
+  }
+
+  spin(rig, dir) {
+    rig.i = (rig.i + dir + rig.items.length) % rig.items.length;
+    this.place(rig);
+  }
+
+  place(rig) {
+    const n = rig.items.length;
+    const narrow = rig.root.clientWidth < 720;
+    const span = Math.min(470, Math.max(210, rig.root.clientWidth * 0.34));
+    rig.items.forEach((el, idx) => {
+      let d = idx - rig.i;
+      if (d > n / 2) d -= n;
+      if (d < -n / 2) d += n;
+      const a = Math.abs(d);
+      const s = 1 - 0.14 * a;
+      el.style.transform = 'translate(-50%,-50%) translate(' + (d * span).toFixed(1) + 'px,' + (a * 34) + 'px) scale(' + s.toFixed(3) + ')';
+      el.style.filter = 'blur(' + a * 6 + 'px)';
+      el.style.opacity = a === 0 ? 1 : (a === 1 && !narrow ? 0.34 : 0);
+      el.style.zIndex = String(10 - a);
+      el.setAttribute('aria-hidden', a === 0 ? 'false' : 'true');
+    });
+    const count = rig.root.querySelector('[data-count]');
+    if (count) count.textContent = String(rig.i + 1).padStart(2, '0');
+    const total = rig.root.querySelector('[data-total]');
+    if (total) total.textContent = String(n).padStart(2, '0');
+    const prog = rig.root.querySelector('[data-progress]');
+    if (prog) prog.style.width = ((rig.i + 1) / n * 100).toFixed(1) + '%';
+    rig.root.querySelectorAll('[data-dot]').forEach(dot => {
+      const on = parseInt(dot.dataset.dot, 10) === rig.i;
+      const d = dot.firstElementChild;
+      if (d) {
+        d.style.background = on ? '#FFF521' : '#3A3A37';
+        d.style.transform = on ? 'scale(1.25)' : 'none';
+      }
+      dot.setAttribute('aria-current', on ? 'true' : 'false');
+    });
+  }
+
+  renderVals() {
+    const v = {};
+    this.state.pos.forEach((p, i) => {
+      v['clip' + i] = 'inset(0 ' + (100 - p).toFixed(2) + '% 0 0)';
+      v['left' + i] = p.toFixed(2) + '%';
+      v['down' + i] = e => this.down(i, e);
+      v['key' + i] = e => this.key(i, e);
+    });
+
+    v.scrolled = this.state.scrolled ? 'true' : 'false';
+    v.menuOpen = this.state.menu ? 'true' : 'false';
+    v.toggleMenu = () => { const m = !this.state.menu; this.setState({ menu: m }); this.lockBody(m); };
+    v.closeMenu = () => { this.setState({ menu: false }); this.lockBody(false); };
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>
